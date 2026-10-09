@@ -1,0 +1,30 @@
+# Gerado pelo install.js (contém caminho absoluto da sua máquina)
+host/com.local.yt_downloader.json
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Segredos e chaves
+.env
+.env.*
+*.pem
+*.key.pem
+*.crt
+
+# Python (caso use scripts auxiliares)
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Downloads de teste
+*.mp4
+*.mp3
+*.m4a
+*.webm
