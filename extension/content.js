@@ -88,6 +88,7 @@ button:focus-visible, select:focus-visible, .switch input:focus-visible + .track
   border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+.adblock { padding-top: 12px; border-top: 1px solid rgba(255,255,255,.1); }
 .progress { display: flex; flex-direction: column; gap: 6px; }
 .plabel { display: flex; justify-content: space-between; font-size: 12px; }
 .pct, .meta { color: #aaa; font-variant-numeric: tabular-nums; }
@@ -139,6 +140,10 @@ root.innerHTML = `
       <div class="meta"></div>
     </div>
     <div class="status" hidden aria-live="polite"><span class="msg"></span></div>
+    <label class="switch adblock" title="Esconde anúncios e pula os de vídeo">
+      <span class="switch-text"><b>Bloquear anúncios</b><span>Esconde e pula anúncios do YouTube</span></span>
+      <input type="checkbox" class="ads"><span class="track"></span>
+    </label>
   </section>
   <button type="button" class="fab" aria-expanded="false">${ICON_DOWNLOAD}<span>Baixar</span></button>
 </div>`;
@@ -256,6 +261,11 @@ tabs.forEach((t) => t.addEventListener('click', () => {
   renderMode();
 }));
 select.addEventListener('change', () => save(mode, select.value));
+// adblock.js (document_start) já criou globalThis.ytAdblock e aplicou a escolha salva.
+const ads = $('.ads');
+ads.disabled = !globalThis.ytAdblock;
+ads.checked = globalThis.ytAdblock?.enabled ?? false;
+ads.addEventListener('change', () => globalThis.ytAdblock?.setEnabled(ads.checked));
 h264.checked = load('h264', '0') === '1';
 h264.addEventListener('change', () => save('h264', h264.checked ? '1' : '0'));
 go.addEventListener('click', start);

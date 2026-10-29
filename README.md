@@ -53,8 +53,25 @@ Depois remova a extensão em `chrome://extensions`.
 ## Testes
 
 ```powershell
-node --test host\test\host.test.js
+node --test "tests/*.test.js" "host/test/*.test.js"
 ```
+
+## Bloqueador de anúncios
+
+O painel tem a chave **Bloquear anúncios** (ligada por padrão; a escolha fica salva). Ela age em três camadas no YouTube:
+
+- **Remove os anúncios da resposta do YouTube** (`extension/adprune.js`, mundo `MAIN`): tira `adPlacements`, `playerAds` e `adSlots` do `JSON.parse`, do `fetch` e de `ytInitialPlayerResponse` antes de o player lê-los. Quando funciona, o anúncio nem chega ao player, sem tela escura.
+- **Esconde** slots de anúncio (banner do topo, anúncios no feed, cartões patrocinados, sobreposições no player).
+- **Pula anúncios de vídeo**: quando o player entra em modo de anúncio, muta, acelera para 16× e vai ao fim do anúncio (só se ele tiver até 5 minutos), além de clicar em "Pular" quando o botão aparece. Ao acabar, restaura volume e velocidade originais.
+- Se o YouTube mostrar o aviso de "bloqueador de anúncios", o script o remove e retoma o vídeo.
+
+Limites, sem rodeios:
+
+- Não bloqueia requisições de rede, só age sobre a página. Anúncios inseridos no próprio stream não passam pela remoção e caem nas outras camadas (acelerar e pular), com uma tela escura breve.
+- Depende dos nomes que o YouTube usa. Quando mudarem, anúncios voltam a aparecer até os campos de `extension/adprune.js` e os seletores de `extension/adblock.js` serem atualizados.
+- Desligar a chave vale para as próximas respostas do YouTube; recarregue a aba para valer na hora.
+- O YouTube combate bloqueadores. O aviso pode ser removido, mas ele pode também parar de entregar o vídeo até você desligar a chave. Não há garantia.
+- Bloquear anúncios também contraria os Termos de Serviço do YouTube. Uso pessoal, por sua conta e risco.
 
 ## Manutenção
 
@@ -92,7 +109,8 @@ yt-dlp -U
 ## Estrutura
 
 ```
-extension/   manifest.json, background.js, content.js, icons/
+extension/   manifest.json, background.js, content.js, adblock.js, adprune.js, icons/
+tests/       adblock.test.js, adprune.test.js
 host/        host.js, host.bat, install.js, test/host.test.js
 ```
 
