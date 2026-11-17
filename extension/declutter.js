@@ -21,12 +21,12 @@
     { key: 'comments', label: 'Esconder comentários', css: ['ytd-comments#comments'] },
     {
       key: 'related',
-      label: 'Esconder recomendados laterais',
+      label: 'Esconder recomendados',
       css: ['#related', 'ytd-watch-next-secondary-results-renderer'],
     },
     {
       key: 'endscreen',
-      label: 'Esconder sugestões do fim do vídeo',
+      label: 'Esconder sugestões do fim',
       css: ['.html5-endscreen', '.ytp-ce-element', '.ytp-endscreen-content', '.ytp-ce-covering-overlay'],
     },
   ];

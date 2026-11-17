@@ -14,6 +14,8 @@ O painel tem um seletor de resolução, a opção "Preferir H.264" e um seletor 
 
 ## Painel: o que tem
 
+A tela principal só mostra o essencial: **Formato**, **Qualidade** e o botão **Baixar**. Trecho, patrocínios e ajustes do YouTube ficam dentro de **Mais opções**, agrupados por assunto (a escolha de abrir ou fechar fica salva). Durante o download o botão vira a barra de progresso.
+
 - **Baixar** MP4 ou MP3, com resolução máxima, preferência por H.264 e bitrate do MP3.
 - **Mostrar na pasta**: depois do download, o painel tem o link "Mostrar na pasta" e a notificação do Chrome abre o arquivo no Explorer ao ser clicada. Em **Mais opções** há também "Abrir pasta de downloads". O host só abre arquivos que estão dentro de `Downloads\YouTube`.
 - **Trecho (opcional)**: campos Início e Fim (`90`, `1:30` ou `1:02:03`). Só o início baixa até o fim; só o fim baixa desde o começo. O corte é preciso (`--force-keyframes-at-cuts`), por isso refaz o trecho e demora mais. O nome do arquivo ganha `(trecho 1m30s-2m00s)` para não ser confundido com o vídeo inteiro.

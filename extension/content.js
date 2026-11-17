@@ -20,111 +20,140 @@ const save = (key, value) => {
 };
 
 const CSS = `
-:host { all: initial; position: fixed; right: 20px; bottom: 20px; z-index: 2147483647;
-  font: 400 13px/1.4 Roboto, "Segoe UI", Arial, sans-serif; color: #f1f1f1; }
+:host { all: initial; position: fixed; right: 24px; bottom: 24px; z-index: 2147483647;
+  font: 400 14px/1.4 Roboto, "Segoe UI", Arial, sans-serif; color: #f5f5f5; }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 button, select, input { font: inherit; color: inherit; }
-button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible,
-.switch input:focus-visible + .track { outline: 2px solid #8ab4ff; outline-offset: 2px; }
+button:focus-visible, select:focus-visible, input:focus-visible,
+.row input:focus-visible + .track { outline: 2px solid #8ab4ff; outline-offset: 2px; }
 
-.wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
 
 .fab { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px 0 14px;
-  border: 0; border-radius: 22px; background: #e53935; color: #fff; font-weight: 500;
+  border: 0; border-radius: 22px; background: #d32f2f; color: #fff; font-weight: 500;
   box-shadow: 0 4px 14px rgba(0,0,0,.45); cursor: pointer; transition: background .15s, transform .1s; }
-.fab:hover { background: #f44336; }
+.fab:hover { background: #c62828; }
 .fab:active { transform: scale(.97); }
 .fab svg { width: 20px; height: 20px; }
 
-.card { width: 300px; max-height: calc(100vh - 110px); overflow-y: auto; padding: 16px; border-radius: 16px;
-  background: #1f1f1f; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 12px 32px rgba(0,0,0,.55);
-  display: flex; flex-direction: column; gap: 14px; scrollbar-width: thin; }
+.card { width: 360px; max-height: calc(100vh - 120px); overflow-y: auto; padding: 20px; border-radius: 20px;
+  background: #181818; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 16px 40px rgba(0,0,0,.6);
+  display: flex; flex-direction: column; gap: 20px; scrollbar-width: thin; }
 .card > * { flex-shrink: 0; }
+.card.busy .dim { opacity: .45; pointer-events: none; }
 
-.head { display: flex; align-items: center; justify-content: space-between; }
-.head h2 { margin: 0; font-size: 15px; font-weight: 500; }
-.close { width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 50%;
-  background: transparent; color: #aaa; cursor: pointer; }
-.close:hover { background: rgba(255,255,255,.1); color: #fff; }
-.close svg { width: 16px; height: 16px; }
+.head { display: flex; align-items: center; gap: 8px; }
+.head-text { flex: 1; min-width: 0; }
+.head h2 { margin: 0; font-size: 17px; font-weight: 500; }
+.video-title { font-size: 13px; color: #a0a0a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.close { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%;
+  background: transparent; color: #a0a0a0; cursor: pointer; }
+.close:hover { background: rgba(255,255,255,.08); color: #fff; }
+.close svg { width: 18px; height: 18px; }
+
+.label { margin-bottom: 8px; font-size: 12px; color: #8c8c8c; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
 
 .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px;
-  border-radius: 12px; background: #121212; }
-.tab { padding: 8px 0; border: 0; border-radius: 9px; background: transparent; color: #aaa;
-  font-weight: 500; cursor: pointer; transition: background .15s, color .15s; }
+  border-radius: 14px; background: #101010; }
+.tab { height: 36px; border: 0; border-radius: 10px; background: transparent; color: #a0a0a0;
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s, color .15s; }
 .tab:hover:not(:disabled) { color: #fff; }
-.tab[aria-selected="true"] { background: #3a3a3a; color: #fff; }
+.tab[aria-selected="true"] { background: #2f2f2f; color: #fff; }
 .tab:disabled { cursor: default; }
 
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field > span, .switch-text span, .hint { font-size: 12px; color: #aaa; }
-.select, .input { width: 100%; height: 40px; border: 1px solid rgba(255,255,255,.14); border-radius: 10px;
-  background-color: #2a2a2a; }
-.select { padding: 0 36px 0 12px; appearance: none; cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23aaa'%3E%3Cpath d='M5 7l5 6 5-6z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center; background-size: 18px; }
-.input { height: 36px; padding: 0 10px; }
-.input::placeholder { color: #777; }
-.select:hover:not(:disabled), .input:hover:not(:disabled) { border-color: rgba(255,255,255,.3); }
-.select:disabled, .input:disabled { opacity: .55; cursor: default; }
+.select, .input { width: 100%; height: 44px; border: 1px solid rgba(255,255,255,.08); border-radius: 14px;
+  background-color: #232323; font-size: 14px; }
+.select { padding: 0 40px 0 14px; appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23a0a0a0'%3E%3Cpath d='M5 7l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 18px; }
+.input { padding: 0 14px; }
+.input::placeholder { color: #8c8c8c; }
+.select:hover:not(:disabled), .input:hover:not(:disabled) { border-color: rgba(255,255,255,.2); }
+.select:disabled, .input:disabled { cursor: default; }
 
-.note { margin: 0; min-height: 36px; display: flex; align-items: center; font-size: 12px; color: #aaa; }
-.hint { margin: 0; }
-.switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; }
-.switch-text { display: flex; flex-direction: column; }
-.switch-text b { font-weight: 500; }
-.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
-.track { position: relative; flex: none; width: 38px; height: 22px; border-radius: 11px;
-  background: #4a4a4a; transition: background .15s; }
-.track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px;
-  border-radius: 50%; background: #fff; transition: transform .15s; }
-.switch input:checked + .track { background: #e53935; }
-.switch input:checked + .track::after { transform: translateX(16px); }
-.switch input:disabled + .track { opacity: .55; }
+.note { margin: 0; min-height: 56px; display: flex; align-items: center; font-size: 12px; color: #a0a0a0; }
+.hint { margin: 8px 0 0; font-size: 12px; color: #a0a0a0; }
 
-.go { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 0;
-  border-radius: 12px; background: #e53935; color: #fff; font-weight: 500; cursor: pointer;
+.list { border-radius: 14px; background: #232323; overflow: hidden; }
+.list .row + .row { border-top: 1px solid rgba(255,255,255,.06); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px;
+  padding: 8px 16px; cursor: pointer; }
+.row-text { display: flex; flex-direction: column; }
+.row-sub { font-size: 12px; color: #a0a0a0; }
+.row input { position: absolute; opacity: 0; width: 0; height: 0; }
+.track { position: relative; flex: none; width: 44px; height: 26px; border: 2px solid #8c8c8c; border-radius: 13px;
+  background: transparent; transition: background .15s, border-color .15s; }
+.track::after { content: ""; position: absolute; top: 5px; left: 5px; width: 12px; height: 12px; border-radius: 50%;
+  background: #8c8c8c; transition: transform .15s, width .15s, height .15s, top .15s, left .15s, background .15s; }
+.row input:checked + .track { background: #f0f0f0; border-color: #f0f0f0; }
+.row input:checked + .track::after { top: 3px; left: 3px; width: 16px; height: 16px; background: #181818;
+  transform: translateX(17px); }
+.row input:disabled + .track { opacity: .55; }
+
+.go { display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border: 0;
+  border-radius: 14px; background: #d32f2f; color: #fff; font-size: 16px; font-weight: 500; cursor: pointer;
   transition: background .15s; }
-.go:hover:not(:disabled) { background: #f44336; }
-.go:disabled { background: #5a2a29; color: #ddd; cursor: default; }
-.go svg { width: 18px; height: 18px; }
-.spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff;
-  border-radius: 50%; animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.go:hover { background: #c62828; }
+.go svg { width: 20px; height: 20px; }
 
-.progress { display: flex; flex-direction: column; gap: 6px; }
-.plabel { display: flex; justify-content: space-between; font-size: 12px; }
-.pct, .meta { color: #aaa; font-variant-numeric: tabular-nums; }
-.bar { height: 6px; border-radius: 3px; background: #3a3a3a; overflow: hidden; }
-.bar i { display: block; height: 100%; width: 0; border-radius: 3px; background: #e53935; transition: width .25s; }
-.bar.indet i { width: 40%; transition: none; animation: slide 1.1s ease-in-out infinite; }
+.progress { display: flex; flex-direction: column; gap: 10px; }
+.pbar { position: relative; height: 52px; border-radius: 14px; background: #2b2b2b; overflow: hidden; }
+.fill { position: absolute; top: 0; bottom: 0; left: 0; width: 0; background: #d32f2f; transition: width .25s; }
+.pbar.indet .fill { width: 40%; transition: none; animation: slide 1.1s ease-in-out infinite; }
 @keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
-.meta { font-size: 11px; min-height: 15px; }
+.plabel { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 16px; font-weight: 500; color: #fff; }
+.pct { opacity: .85; font-weight: 400; font-variant-numeric: tabular-nums; }
+.meta { display: flex; justify-content: space-between; min-height: 17px; font-size: 12px; color: #a0a0a0;
+  font-variant-numeric: tabular-nums; }
 
-.status { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 12px;
-  border-radius: 10px; font-size: 12px; background: rgba(255,255,255,.06); word-break: break-word; }
-.status[data-state="ok"] { background: rgba(76,175,80,.16); color: #a5d6a7; }
-.status[data-state="err"] { background: rgba(244,67,54,.16); color: #ffab91; }
-.status .msg { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.status { display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 14px;
+  background: rgba(76,175,80,.12); border: 1px solid rgba(76,175,80,.28); }
+.status[data-state="err"] { background: rgba(244,67,54,.12); border-color: rgba(244,67,54,.3); }
+.st-row { display: flex; align-items: flex-start; gap: 12px; }
+.st-icon { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%;
+  background: #2e7d32; color: #fff; font-size: 14px; font-weight: 700; }
+.status[data-state="err"] .st-icon { background: #c62828; }
+.st-text { min-width: 0; }
+.st-title { font-weight: 500; color: #e6f4e7; }
+.status[data-state="err"] .st-title { color: #ffd9d4; }
+.st-msg { font-size: 12px; color: #a5d6a7; word-break: break-word; display: -webkit-box;
+  -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.status[data-state="err"] .st-msg { color: #ffab91; }
+.st-sub { margin-top: 2px; font-size: 12px; color: #a0a0a0; }
+.outline { display: flex; align-items: center; justify-content: center; gap: 8px; height: 40px;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 12px; background: transparent; font-size: 14px;
+  font-weight: 500; cursor: pointer; }
+.outline:hover { background: rgba(255,255,255,.06); }
+.outline svg { width: 18px; height: 18px; }
 
-.link { padding: 0; border: 0; background: none; color: #8ab4ff; font-size: 12px; text-align: left;
-  text-decoration: underline; cursor: pointer; }
-.link:hover { color: #b3cdff; }
-
-.more { border-top: 1px solid rgba(255,255,255,.1); padding-top: 12px; }
-.more summary { cursor: pointer; color: #bbb; font-weight: 500; list-style: none; user-select: none; }
-.more summary::-webkit-details-marker { display: none; }
-.more summary::before { content: "▸ "; }
-.more[open] summary::before { content: "▾ "; }
-.more-body { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
-.group { display: flex; flex-direction: column; gap: 10px; }
-.group-title { font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: #8a8a8a; }
-.range { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.more { display: flex; flex-direction: column; gap: 20px; }
+.more-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%;
+  padding: 12px 0 0; border: 0; border-top: 1px solid rgba(255,255,255,.08); background: none;
+  text-align: left; cursor: pointer; }
+.more-text { display: flex; flex-direction: column; }
+.more-title { font-size: 14px; font-weight: 500; }
+.more-sub { font-size: 12px; color: #a0a0a0; }
+.chev { width: 20px; height: 20px; flex: none; color: #a0a0a0; transition: transform .15s; }
+.more-toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.more-body { display: flex; flex-direction: column; gap: 20px; }
+.range { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > span { font-size: 12px; color: #a0a0a0; }
+.folder { display: flex; align-items: center; gap: 12px; width: 100%; height: 52px; padding: 0 16px;
+  border: 0; border-radius: 14px; background: #232323; font-size: 14px; text-align: left; cursor: pointer; }
+.folder:hover { background: #2a2a2a; }
+.folder svg { width: 20px; height: 20px; flex: none; color: #a0a0a0; }
+.folder span { flex: 1; }
 `;
 
 const ICON_DOWNLOAD = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>';
-const ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6z"/></svg>';
+const ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const ICON_FOLDER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>';
+const ICON_CHEVRON_DOWN = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+const ICON_CHEVRON_RIGHT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
 
 const host = document.createElement('div');
 host.id = 'ytdl-root';
@@ -135,51 +164,79 @@ root.innerHTML = `
 <div class="wrap">
   <section class="card" role="dialog" aria-label="Baixar vídeo" hidden>
     <div class="head">
-      <h2>Baixar este vídeo</h2>
+      <div class="head-text">
+        <h2>Baixar este vídeo</h2>
+        <div class="video-title"></div>
+      </div>
       <button type="button" class="close" aria-label="Fechar">${ICON_CLOSE}</button>
     </div>
-    <div class="tabs" role="tablist">
-      <button type="button" class="tab" role="tab" data-mode="video">Vídeo · MP4</button>
-      <button type="button" class="tab" role="tab" data-mode="audio">Áudio · MP3</button>
+
+    <div class="dim">
+      <div class="label">Formato</div>
+      <div class="tabs" role="tablist" aria-label="Formato">
+        <button type="button" class="tab" role="tab" data-mode="video">Vídeo (MP4)</button>
+        <button type="button" class="tab" role="tab" data-mode="audio">Áudio (MP3)</button>
+      </div>
     </div>
-    <label class="field">
-      <span class="quality-label"></span>
-      <select class="select"></select>
-    </label>
-    <label class="switch" data-only="video" title="Mais compatível com players e TVs, mas limita a cerca de 1080p">
-      <span class="switch-text"><b>Preferir H.264</b><span>Mais compatível, até ~1080p</span></span>
-      <input type="checkbox" class="h264"><span class="track"></span>
-    </label>
-    <p class="note" data-only="audio">Convertido do áudio original do YouTube; bitrates altos só aumentam o arquivo.</p>
+
+    <div class="dim">
+      <div class="label">Qualidade</div>
+      <div class="stack">
+        <select class="select"></select>
+        <div class="list list-quality" data-only="video"></div>
+        <p class="note" data-only="audio">Convertido do áudio original do YouTube; bitrates altos só aumentam o arquivo.</p>
+      </div>
+    </div>
+
     <button type="button" class="go"></button>
     <div class="progress" hidden>
-      <div class="plabel"><span class="stage"></span><span class="pct"></span></div>
-      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div>
-      <div class="meta"></div>
+      <div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do download">
+        <div class="fill"></div>
+        <div class="plabel"><span class="stage"></span><span class="pct"></span></div>
+      </div>
+      <div class="meta"><span class="speed"></span><span class="eta"></span></div>
     </div>
+
     <div class="status" hidden aria-live="polite">
-      <span class="msg"></span>
-      <button type="button" class="link reveal" hidden>Mostrar na pasta</button>
+      <div class="st-row">
+        <span class="st-icon" aria-hidden="true"></span>
+        <div class="st-text">
+          <div class="st-title"></div>
+          <div class="st-msg"></div>
+          <div class="st-sub" hidden>Salvo em Downloads\\YouTube</div>
+        </div>
+      </div>
+      <button type="button" class="outline reveal" hidden>${ICON_FOLDER}Mostrar na pasta</button>
     </div>
-    <details class="more">
-      <summary>Mais opções</summary>
-      <div class="more-body">
-        <div class="group">
-          <div class="group-title">Trecho (opcional)</div>
+
+    <div class="more dim">
+      <button type="button" class="more-toggle" aria-expanded="false">
+        <span class="more-text">
+          <span class="more-title">Mais opções</span>
+          <span class="more-sub">Trecho, patrocínios e ajustes do YouTube</span>
+        </span>
+        ${ICON_CHEVRON_DOWN}
+      </button>
+      <div class="more-body" hidden>
+        <div>
+          <div class="label">Cortar trecho</div>
           <div class="range">
             <label class="field"><span>Início</span><input class="input start" placeholder="0:30" inputmode="numeric" autocomplete="off"></label>
             <label class="field"><span>Fim</span><input class="input end" placeholder="1:45" inputmode="numeric" autocomplete="off"></label>
           </div>
-          <p class="hint">Vazio = vídeo inteiro. Aceita 90, 1:30 ou 1:02:03. Cortar refaz o trecho e demora mais.</p>
-          <label class="switch" title="Remove sponsor, autopromoção e pedidos de interação (SponsorBlock)">
-            <span class="switch-text"><b>Remover patrocínios do arquivo</b><span>Usa o SponsorBlock; mais lento</span></span>
-            <input type="checkbox" class="dl-sponsor"><span class="track"></span>
-          </label>
+          <p class="hint">Deixe vazio para baixar o vídeo inteiro.</p>
         </div>
-        <div class="group yt-options"><div class="group-title">No YouTube</div></div>
-        <button type="button" class="link open-folder">Abrir pasta de downloads</button>
+        <div>
+          <div class="label">Patrocínios</div>
+          <div class="list list-sponsor"></div>
+        </div>
+        <div>
+          <div class="label">No YouTube</div>
+          <div class="list yt-options"></div>
+        </div>
+        <button type="button" class="folder open-folder">${ICON_FOLDER}<span>Abrir pasta de downloads</span>${ICON_CHEVRON_RIGHT}</button>
       </div>
-    </details>
+    </div>
   </section>
   <button type="button" class="fab" aria-expanded="false">${ICON_DOWNLOAD}<span>Baixar</span></button>
 </div>`;
@@ -188,14 +245,44 @@ const $ = (sel) => root.querySelector(sel);
 const card = $('.card');
 const fab = $('.fab');
 const select = $('.select');
-const h264 = $('.h264');
 const go = $('.go');
 const status = $('.status');
 const reveal = $('.reveal');
 const startInput = $('.start');
 const endInput = $('.end');
-const dlSponsor = $('.dl-sponsor');
 const tabs = [...root.querySelectorAll('.tab')];
+const moreToggle = $('.more-toggle');
+
+// Uma linha de lista com chave liga/desliga. Devolve o <input> para quem precisa ler o valor.
+function addRow(list, { title, sub = '', checked, disabled = false, onChange }) {
+  const row = document.createElement('label');
+  row.className = 'row';
+  row.innerHTML = '<span class="row-text"><span class="row-title"></span><span class="row-sub"></span></span><input type="checkbox"><span class="track"></span>';
+  row.querySelector('.row-title').textContent = title;
+  const subEl = row.querySelector('.row-sub');
+  subEl.textContent = sub;
+  subEl.hidden = !sub;
+  const input = row.querySelector('input');
+  input.checked = checked;
+  input.disabled = disabled;
+  input.addEventListener('change', () => onChange(input.checked));
+  list.append(row);
+  return input;
+}
+
+const h264 = addRow($('.list-quality'), {
+  title: 'Preferir H.264',
+  sub: 'Mais compatível com TVs e players',
+  checked: load('h264', '0') === '1',
+  onChange: (on) => save('h264', on ? '1' : '0'),
+});
+
+const dlSponsor = addRow($('.list-sponsor'), {
+  title: 'Remover do arquivo baixado',
+  sub: 'Demora um pouco mais',
+  checked: load('dlsponsor', '0') === '1',
+  onChange: (on) => save('dlsponsor', on ? '1' : '0'),
+});
 
 let mode = load('mode', 'video') === 'audio' ? 'audio' : 'video';
 let busy = false;
@@ -203,7 +290,7 @@ let lastFile = null;
 
 function renderMode() {
   tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.mode === mode)));
-  $('.quality-label').textContent = mode === 'video' ? 'Resolução máxima' : 'Qualidade do MP3';
+  select.setAttribute('aria-label', mode === 'video' ? 'Resolução máxima' : 'Qualidade do MP3');
   select.replaceChildren(...QUALITIES[mode].map(([value, label]) => new Option(label, value)));
   const saved = load(mode, 'best');
   select.value = QUALITIES[mode].some(([v]) => v === saved) ? saved : 'best';
@@ -213,10 +300,14 @@ function renderMode() {
   go.append(`Baixar ${LABELS[mode]}`);
 }
 
+// state: 'ok' | 'err' | null (esconde). Em 'ok', `text` é o nome do arquivo e `file` o caminho completo.
 function setStatus(state, text, title = '', file = null) {
   status.hidden = !state;
   status.dataset.state = state || '';
-  $('.msg').textContent = text || '';
+  $('.st-icon').textContent = state === 'err' ? '!' : '✓';
+  $('.st-title').textContent = state === 'err' ? 'Não foi possível baixar' : 'Download concluído';
+  $('.st-msg').textContent = text || '';
+  $('.st-sub').hidden = state !== 'ok';
   status.title = title;
   lastFile = file;
   reveal.hidden = !file;
@@ -248,31 +339,26 @@ function formatEta(seconds) {
 }
 
 function renderProgress({ stage, percent, speed, eta } = {}) {
-  const bar = $('.bar');
+  const bar = $('.pbar');
   const known = typeof percent === 'number';
   $('.stage').textContent = STAGES[stage] || 'Preparando…';
   $('.pct').textContent = known ? Math.floor(percent) + '%' : '';
-  $('.bar i').style.width = known ? percent + '%' : '';
+  $('.fill').style.width = known ? percent + '%' : '';
   bar.classList.toggle('indet', !known);
   if (known) bar.setAttribute('aria-valuenow', String(Math.floor(percent)));
   else bar.removeAttribute('aria-valuenow');
-  const details = [formatSpeed(speed), eta != null ? 'faltam ' + formatEta(eta) : ''].filter(Boolean);
-  $('.meta').textContent = details.join(' · ');
+  $('.speed').textContent = formatSpeed(speed);
+  $('.eta').textContent = eta != null ? 'faltam ' + formatEta(eta) : '';
 }
 
 function setBusy(value) {
   busy = value;
+  card.classList.toggle('busy', value);
   $('.progress').hidden = !value;
+  go.hidden = value;
   if (value) renderProgress();
-  [...tabs, select, h264, go, startInput, endInput, dlSponsor].forEach((el) => { el.disabled = value; });
-  if (value) {
-    go.replaceChildren();
-    const spinner = document.createElement('span');
-    spinner.className = 'spinner';
-    go.append(spinner, 'Baixando…');
-  } else {
-    renderMode();
-  }
+  else renderMode();
+  [...tabs, select, h264, startInput, endInput, dlSponsor].forEach((el) => { el.disabled = value; });
 }
 
 async function start() {
@@ -288,7 +374,7 @@ async function start() {
     const res = await chrome.runtime.sendMessage({ type: 'download', url, mode, ...options });
     if (res?.ok) {
       const name = res.file.split(/[\\/]/).pop();
-      setStatus('ok', 'Concluído: ' + name, res.file, res.file);
+      setStatus('ok', name, res.file, res.file);
     } else {
       const error = res?.error || 'Sem resposta do service worker';
       setStatus('err', error, error);
@@ -308,41 +394,29 @@ async function openInExplorer(target, file) {
   }
 }
 
+const pageTitle = () => document.title.replace(/^\(\d+\)\s*/, '').replace(/\s*-\s*YouTube$/, '').trim();
+const updateTitle = () => { $('.video-title').textContent = pageTitle(); };
+
 function toggle(open) {
+  if (open) updateTitle();
   card.hidden = !open;
   fab.setAttribute('aria-expanded', String(open));
 }
 
-// ---------- chaves "No YouTube" ----------
-
-function addSwitch({ label, hint = '', checked, disabled = false, onChange }) {
-  const row = document.createElement('label');
-  row.className = 'switch';
-  row.innerHTML = '<span class="switch-text"><b></b><span></span></span><input type="checkbox"><span class="track"></span>';
-  row.querySelector('b').textContent = label;
-  const hintEl = row.querySelector('.switch-text span');
-  hintEl.textContent = hint;
-  hintEl.hidden = !hint;
-  const input = row.querySelector('input');
-  input.checked = checked;
-  input.disabled = disabled;
-  input.addEventListener('change', () => onChange(input.checked));
-  $('.yt-options').append(row);
+function toggleMore(open) {
+  moreToggle.setAttribute('aria-expanded', String(open));
+  $('.more-body').hidden = !open;
+  $('.more-sub').hidden = open;
+  save('more', open ? '1' : '0');
 }
 
-// adblock.js e declutter.js (document_start) já criaram os objetos globais e aplicaram as escolhas salvas.
-addSwitch({
-  label: 'Bloquear anúncios',
-  hint: 'Esconde e pula anúncios do YouTube',
-  checked: globalThis.ytAdblock?.enabled ?? false,
-  disabled: !globalThis.ytAdblock,
-  onChange: (on) => globalThis.ytAdblock?.setEnabled(on),
-});
+// ---------- chaves de patrocínios e "No YouTube" ----------
 
+// adblock.js e declutter.js (document_start) já criaram os objetos globais e aplicaram as escolhas salvas.
 let sponsorSkip = load('sponsorskip', '1') === '1';
-addSwitch({
-  label: 'Pular patrocínios',
-  hint: 'SponsorBlock, ao assistir',
+addRow($('.list-sponsor'), {
+  title: 'Pular ao assistir',
+  sub: 'Usa o SponsorBlock',
   checked: sponsorSkip,
   onChange: (on) => {
     sponsorSkip = on;
@@ -351,9 +425,16 @@ addSwitch({
   },
 });
 
+addRow($('.yt-options'), {
+  title: 'Bloquear anúncios',
+  checked: globalThis.ytAdblock?.enabled ?? false,
+  disabled: !globalThis.ytAdblock,
+  onChange: (on) => globalThis.ytAdblock?.setEnabled(on),
+});
+
 for (const option of globalThis.ytDeclutter?.options ?? []) {
-  addSwitch({
-    label: option.label,
+  addRow($('.yt-options'), {
+    title: option.label,
     checked: globalThis.ytDeclutter.isOn(option.key),
     onChange: (on) => globalThis.ytDeclutter.set(option.key, on),
   });
@@ -415,13 +496,10 @@ tabs.forEach((t) => t.addEventListener('click', () => {
   renderMode();
 }));
 select.addEventListener('change', () => save(mode, select.value));
-h264.checked = load('h264', '0') === '1';
-h264.addEventListener('change', () => save('h264', h264.checked ? '1' : '0'));
-dlSponsor.checked = load('dlsponsor', '0') === '1';
-dlSponsor.addEventListener('change', () => save('dlsponsor', dlSponsor.checked ? '1' : '0'));
 go.addEventListener('click', start);
 reveal.addEventListener('click', () => lastFile && openInExplorer('file', lastFile));
 $('.open-folder').addEventListener('click', () => openInExplorer('folder'));
+moreToggle.addEventListener('click', () => toggleMore(moreToggle.getAttribute('aria-expanded') !== 'true'));
 // Progresso enviado pelo service worker durante o download.
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg?.type === 'progress' && busy) renderProgress(msg);
@@ -431,6 +509,7 @@ $('.close').addEventListener('click', () => { toggle(false); fab.focus(); });
 card.addEventListener('keydown', (e) => { if (e.key === 'Escape') toggle(false); });
 
 renderMode();
+toggleMore(load('more', '0') === '1');
 document.documentElement.append(host, toastHost);
 
 // O YouTube é uma SPA: a página não recarrega entre vídeos.
@@ -446,6 +525,7 @@ function refresh() {
     endInput.value = '';
     if (!busy) setStatus(null);
   }
+  updateTitle();
   loadSponsorSegments();
 }
 document.addEventListener('fullscreenchange', refresh);
