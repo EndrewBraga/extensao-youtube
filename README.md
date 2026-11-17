@@ -12,6 +12,19 @@ Página do YouTube ──> content.js (botões) ──> background.js ──conn
 
 O painel tem um seletor de resolução, a opção "Preferir H.264" e um seletor de bitrate para o MP3. A escolha fica salva no navegador. Durante o download o painel mostra a etapa (vídeo, áudio, junção ou conversão), a porcentagem, a velocidade e o tempo restante; o resultado e eventuais erros ficam visíveis no próprio painel. Os arquivos vão para `%USERPROFILE%\Downloads\YouTube`. Playlists não são suportadas (só o vídeo da aba).
 
+## Painel: o que tem
+
+- **Baixar** MP4 ou MP3, com resolução máxima, preferência por H.264 e bitrate do MP3.
+- **Mostrar na pasta**: depois do download, o painel tem o link "Mostrar na pasta" e a notificação do Chrome abre o arquivo no Explorer ao ser clicada. Em **Mais opções** há também "Abrir pasta de downloads". O host só abre arquivos que estão dentro de `Downloads\YouTube`.
+- **Trecho (opcional)**: campos Início e Fim (`90`, `1:30` ou `1:02:03`). Só o início baixa até o fim; só o fim baixa desde o começo. O corte é preciso (`--force-keyframes-at-cuts`), por isso refaz o trecho e demora mais. O nome do arquivo ganha `(trecho 1m30s-2m00s)` para não ser confundido com o vídeo inteiro.
+- **Remover patrocínios do arquivo**: usa o SponsorBlock via `yt-dlp` (`sponsor`, `selfpromo`, `interaction`). O nome ganha `(sem patrocínio)`.
+- **Atualização automática do yt-dlp**: se um download falha por algo que parece desatualização (extração, HTTP 403 etc.), o host roda `yt-dlp -U` e tenta de novo uma vez, no máximo a cada 6 horas. Vídeo indisponível, privado ou só para membros não dispara atualização.
+- **No YouTube** (chaves, ficam salvas): bloquear anúncios, pular patrocínios ao assistir e esconder Shorts, comentários, recomendados laterais e sugestões do fim do vídeo (essas últimas começam desligadas).
+
+### Pular patrocínios (SponsorBlock)
+
+Ao abrir um vídeo, o service worker consulta `https://sponsor.ajay.app` e o player pula os trechos de `sponsor`, `selfpromo` e `interaction` mostrando um aviso rápido. **Privacidade:** a consulta envia só os 4 primeiros caracteres do hash SHA-256 do ID do vídeo, nunca o ID. Os trechos vêm de votos da comunidade: podem faltar ou estar errados em vídeos novos. Não pula durante anúncios.
+
 ## Pré-requisitos
 
 No PowerShell:
@@ -91,7 +104,8 @@ yt-dlp -U
 | "Access to the specified native messaging host is forbidden" | O ID da extensão carregada difere do `allowed_origins`. Use a pasta `extension\` original, sem alterar o campo `key` do manifest. |
 | "Native host has exited" / "host encerrou sem responder" | O `node` não está no PATH do Chrome. Reinicie o Chrome. Teste `host\host.bat` num terminal: ele deve ficar esperando entrada. |
 | "yt-dlp não encontrado no PATH" ou "ffmpeg não encontrado no PATH" | Instale com o `winget` acima e reinicie o Chrome **por completo**: fechar as janelas não basta, porque o Chrome continua em segundo plano com o PATH antigo. Use `taskkill /F /IM chrome.exe` e abra de novo. |
-| Erro do yt-dlp (vídeo indisponível, HTTP 403 etc.) | Rode `yt-dlp -U`. Se persistir, teste a mesma URL no terminal com `yt-dlp URL`. |
+| Erro do yt-dlp (vídeo indisponível, HTTP 403 etc.) | O host já tenta `yt-dlp -U` sozinho (no máximo a cada 6h). Se persistir, rode `yt-dlp -U` e teste a mesma URL no terminal com `yt-dlp URL`. Mensagem "tentei atualizar o yt-dlp, sem sucesso": a atualização falhou; use `winget upgrade yt-dlp.yt-dlp`. |
+| "Arquivo não encontrado" ao clicar em Mostrar na pasta | O arquivo foi movido ou apagado depois do download. |
 | Os botões não aparecem | Só existem em `/watch?v=...`. Recarregue a aba. Verifique se a extensão está ativa em `chrome://extensions`. |
 | Botão mostra "Recarregue a página" | A extensão foi recarregada e a aba ficou com o script antigo. Recarregue a aba. |
 | Quero ver o erro completo | A notificação trunca a mensagem. Rode o comando do yt-dlp manualmente no terminal. |
@@ -103,15 +117,17 @@ yt-dlp -U
 - A resolução escolhida é um **teto**: se o vídeo não tiver aquela qualidade, baixa a maior abaixo dela.
 - O MP3 é convertido do áudio original do YouTube (~128–160 kbps em AAC/Opus). Escolher 320 kbps não aumenta a qualidade real, só o tamanho.
 - Sem playlists nem legendas.
+- Trecho e remoção de patrocínios refazem partes do vídeo com o ffmpeg: demoram mais que um download normal.
+- A atualização automática usa `yt-dlp -U`. Se o `yt-dlp` foi instalado de um jeito que não permite se atualizar sozinho, ela falha e o erro original é mostrado com um aviso.
 - O botão depende de a aba ter o content script carregado. Em abas abertas antes de instalar a extensão, recarregue.
 - Os botões ficam desabilitados durante o download da aba. Downloads em abas diferentes rodam em paralelo.
 
 ## Estrutura
 
 ```
-extension/   manifest.json, background.js, content.js, adblock.js, adprune.js, icons/
-tests/       adblock.test.js, adprune.test.js
-host/        host.js, host.bat, install.js, test/host.test.js
+extension/   manifest.json, background.js, content.js, sponsor.js, declutter.js, adblock.js, adprune.js, icons/
+tests/       adblock.test.js, adprune.test.js, sponsor.test.js, declutter.test.js
+host/        host.js, host.bat, install.js, test/host.test.js, test/host-features.test.js
 ```
 
 `host/com.local.yt_downloader.json` é gerado pelo `install.js` (contém caminho local) e fica fora do git.

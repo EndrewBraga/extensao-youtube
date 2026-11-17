@@ -18,6 +18,7 @@ const PROGRESS_ARGS = [
   '--progress-template',
   'download:YTDLP_DL|%(progress.downloaded_bytes)s|%(progress.total_bytes)s|%(progress.total_bytes_estimate)s|%(progress.speed)s|%(progress.eta)s|%(info.vcodec)s',
   '--progress-template', 'postprocess:YTDLP_PP|%(progress.postprocessor)s|%(progress.status)s',
+  '--encoding', 'utf-8',
 ];
 
 function frame(obj) {
